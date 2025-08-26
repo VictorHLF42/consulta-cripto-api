@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36310.24 d17.14
+VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAPI", "CryptoAPI\CryptoAPI.csproj", "{BEF40021-9FAA-46F7-BB11-F5C5D6A5B1DB}"
 EndProject
@@ -11,7 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra", "Infra\Infra.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{E4B6D24B-B3CE-47F9-ADA2-A07AFFBDA527}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{22D2FF72-38A5-4210-90C5-DF0A806FD0A7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Application", "1 - Application", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Presentation", "0 - Presentation", "{71286B92-B504-4D60-A6D8-5B258BBD08DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Infra", "2 - Infra", "{B2B3B45A-DE4C-439A-8BB4-02637DD386C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Domain", "3 - Domain", "{F78355F5-2E6C-44AB-BDEE-1E6F56D5F66E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,13 +41,15 @@ Global
 		{E4B6D24B-B3CE-47F9-ADA2-A07AFFBDA527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B6D24B-B3CE-47F9-ADA2-A07AFFBDA527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B6D24B-B3CE-47F9-ADA2-A07AFFBDA527}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22D2FF72-38A5-4210-90C5-DF0A806FD0A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22D2FF72-38A5-4210-90C5-DF0A806FD0A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22D2FF72-38A5-4210-90C5-DF0A806FD0A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22D2FF72-38A5-4210-90C5-DF0A806FD0A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BEF40021-9FAA-46F7-BB11-F5C5D6A5B1DB} = {71286B92-B504-4D60-A6D8-5B258BBD08DE}
+		{FBDBB155-B4F2-419D-956D-138031DA5B27} = {F78355F5-2E6C-44AB-BDEE-1E6F56D5F66E}
+		{754C4D0E-54CD-4605-A436-30480F8E0E31} = {B2B3B45A-DE4C-439A-8BB4-02637DD386C7}
+		{E4B6D24B-B3CE-47F9-ADA2-A07AFFBDA527} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {33FCBE6C-AD66-4448-8922-368946078A4F}
