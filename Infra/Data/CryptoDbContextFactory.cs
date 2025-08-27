@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Reflection.Metadata;
 
 namespace Infra.Data
 {
@@ -9,6 +10,7 @@ namespace Infra.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<CryptoDbContext>();
             optionsBuilder.UseSqlite("Data Source=crypto.db");
+
 
             return new CryptoDbContext(optionsBuilder.Options);
         }
