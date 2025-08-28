@@ -8,6 +8,6 @@ namespace Domain.Interfaces
 {
     public interface ICryptoRepository
     {
-        Task<CryptoCurrency> GetBySymbolAsync(string symbol);
+        Task<CryptoCurrency?> GetBySymbolAsync(string symbol);
     }
 }

@@ -14,7 +14,7 @@ namespace Infra.Data
             _context = context;
         }
 
-        public async Task<CryptoCurrency> GetBySymbolAsync(string symbol)
+        public async Task<CryptoCurrency?> GetBySymbolAsync(string symbol)
         {
             return await _context.Cryptocurrencies
                                 .FirstOrDefaultAsync(c => c.Symbol == symbol);
