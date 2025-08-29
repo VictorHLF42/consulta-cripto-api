@@ -24,7 +24,6 @@ namespace Application.Services
 
             if (crypto != null)
             {
-                
                 return Result.Ok<decimal?>(crypto.Price);
             }
 
@@ -39,10 +38,11 @@ namespace Application.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
+                await _cryptoRepository.AddAsync(newCrypto);
+
                 return Result.Ok<decimal?>(newCrypto.Price);
             }
 
-            // O retorno de falha é padrão no FluentResults
             return Result.Fail("Criptomoeda não encontrada.");
         }
     }
