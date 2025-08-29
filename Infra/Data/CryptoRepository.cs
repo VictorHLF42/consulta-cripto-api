@@ -19,5 +19,11 @@ namespace Infra.Data
             return await _context.Cryptocurrencies
                                 .FirstOrDefaultAsync(c => c.Symbol == symbol);
         }
+
+        public async Task AddAsync(CryptoCurrency crypto)
+        {
+            await _context.Cryptocurrencies.AddAsync(crypto);
+            await _context.SaveChangesAsync();
+        }
     }
 }
