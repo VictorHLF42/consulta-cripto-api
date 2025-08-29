@@ -1,9 +1,9 @@
-﻿using Application.ExternalServices;
-using Domain;
-using Domain.Interfaces;
-using System;
-using System.ComponentModel.Design;
+﻿using Domain.Interfaces;
 using System.Threading.Tasks;
+using Application.ExternalServices;
+using Domain;
+using System;
+using FluentResults;
 
 namespace Application.Services
 {
@@ -18,18 +18,16 @@ namespace Application.Services
             _coinMarketCapClient = coinMarketCapClient;
         }
 
-        public async Task<decimal?> GetPriceBySymbolAsync(string symbol)
+        public async Task<Result<decimal?>> GetPriceBySymbolAsync(string symbol)
         {
-           
             var crypto = await _cryptoRepository.GetBySymbolAsync(symbol);
 
             if (crypto != null)
             {
-              
-                return crypto.Price;
+                
+                return Result.Ok<decimal?>(crypto.Price);
             }
 
-           
             var externalPrice = await _coinMarketCapClient.GetPriceFromExternalApiAsync(symbol);
 
             if (externalPrice != null)
@@ -41,15 +39,11 @@ namespace Application.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
-           
-
-            
-
-                return newCrypto.Price;
+                return Result.Ok<decimal?>(newCrypto.Price);
             }
 
-         
-            return null;
+            // O retorno de falha é padrão no FluentResults
+            return Result.Fail("Criptomoeda não encontrada.");
         }
     }
 }
