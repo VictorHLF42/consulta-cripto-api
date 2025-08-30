@@ -1,68 +1,47 @@
-# API de Consulta de Preço de Criptomoedas
+# 🚀 API de Consulta de Preço de Criptomoedas
 
-**Status: Em Desenvolvimento**
+Este projeto é uma **API RESTful** desenvolvida em **.NET 8**, projetada para consultar e gerenciar o preço de criptomoedas em tempo real.  
+A API utiliza **SQLite** para cache local e integra-se com a **API pública da CoinMarketCap** para garantir dados sempre atualizados.  
 
-[cite_start]Este projeto é uma API RESTful desenvolvida em .NET 8 que simula parte de uma aplicação do domínio de criptoativos[cite: 7, 8]. [cite_start]O objetivo é construir uma API que se integra com a API pública da CoinMarketCap para consultar e armazenar preços de criptomoedas[cite: 8].
-
----
-
-### Requisitos
-
-Para rodar este projeto, você precisará de:
-* .NET 8 SDK
-* [cite_start]Uma chave de API da CoinMarketCap [cite: 43]
+**Status do Projeto:** 🚧 Em desenvolvimento  
 
 ---
 
-### Estrutura da Arquitetura
+## 🏛 Arquitetura da Solução
 
-[cite_start]A aplicação foi estruturada em camadas para garantir a separação de responsabilidades e a manutenibilidade, conforme exigido no desafio[cite: 4, 21]:
+A aplicação foi construída seguindo os princípios da **Arquitetura Limpa**, organizada em quatro camadas independentes para garantir **separação de responsabilidades**, **testabilidade** e **fácil manutenção**:
 
-* [cite_start]**Presentation**: Responsável pelos controllers da API e pelo tratamento das respostas HTTP[cite: 24].
-* [cite_start]**Application**: Contém os casos de uso (use cases) da aplicação, utilizando o FluentResults para padronizar os retornos[cite: 25, 26].
-* [cite_start]**Domain**: Camada para as entidades de negócio (ex: `CryptoCurrency`) e as regras de domínio[cite: 27].
-* [cite_start]**Infra**: Inclui os repositórios para acesso a dados, o contexto do Entity Framework e as migrations[cite: 28].
-
----
-
-### Requisitos Funcionais
-
-[cite_start]A API expõe um endpoint para consulta de preços[cite: 10, 11, 12]:
-
-* [cite_start]**GET `/crypto/{symbol}`**: Retorna o preço da criptomoeda consultada em USD[cite: 12].
-
-**Regras de Negócio:**
-1.  [cite_start]Ao receber uma requisição, a aplicação deve primeiro verificar na base de dados SQLite se a cotação já existe[cite: 14].
-2.  [cite_start]Se a moeda for encontrada, o valor local é retornado[cite: 15].
-3.  [cite_start]Se a moeda não for encontrada, a aplicação chama a API da CoinMarketCap[cite: 16, 17]. [cite_start]Se a cotação for obtida, ela é salva no banco de dados local antes de ser retornada ao usuário[cite: 18].
-4.  [cite_start]Caso a moeda não seja encontrada na CoinMarketCap, um erro apropriado é retornado[cite: 19].
+- **Presentation** → Contém os `Controllers` da API e o tratamento das respostas HTTP.  
+- **Application** → Reúne a lógica de negócio, casos de uso e utiliza **FluentResults** para padronizar os retornos.  
+- **Domain** → Define as entidades de negócio (`CryptoCurrency`) e contratos como `ICryptoRepository`.  
+- **Infra** → Gerencia o acesso a dados, incluindo `DbContext` e implementações de repositórios.  
 
 ---
 
-### Tecnologias Utilizadas
+## ⚙️ Funcionalidades (Parciais)
 
-* **ASP.NET Core** em .NET 8
-* [cite_start]**Entity Framework Core** com Migrations [cite: 5]
-* [cite_start]**SQLite** para persistência local dos dados [cite: 30, 31]
-* [cite_start]**FluentResults** para padronização dos retornos [cite: 26]
+### Endpoint planejado:
+- **`GET /api/Crypto/{symbol}`** → Retorna o preço da criptomoeda em **USD**.  
 
----
-
-### Instalação e Configuração
-
-1.  Clone este repositório.
-2.  Na pasta raiz do projeto, configure sua chave de API da CoinMarketCap no arquivo `appsettings.json` ou como uma variável de ambiente. [cite_start]A chave deve ser adicionada a um cabeçalho de requisição `X-CMC_PRO_API_KEY`[cite: 46].
-3.  Execute as migrations para criar o banco de dados localmente:
-    ```bash
-    dotnet ef database update
-    ```
-4.  Execute a API:
-    ```bash
-    dotnet run --project [NomeDoProjetoDaAPI]
-    ```
+### Regras de Negócio:
+1. A aplicação busca primeiro a cotação em cache no **banco de dados local (SQLite)**.  
+2. Caso não encontre, consulta a **CoinMarketCap API**.  
+3. Se a consulta externa for bem-sucedida, os dados são **armazenados no cache local**.  
+4. Se a moeda não existir em nenhuma das fontes, retorna um erro **`404 Not Found`**.  
 
 ---
 
-### Autor
+## 🛠 Tecnologias Utilizadas
 
-* Victor H.  - [@VictorHLF42](https://github.com/VictorHLF42)
+- **.NET 8 (ASP.NET Core)**  
+- **Entity Framework Core + Migrations**  
+- **SQLite** para persistência local  
+- **FluentResults** para padronização de retornos  
+
+---
+
+## 📥 Instalação e Configuração (em andamento)
+
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/VictorHLF42/crypto-api.git
