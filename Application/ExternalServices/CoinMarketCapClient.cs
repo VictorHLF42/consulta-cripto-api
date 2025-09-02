@@ -1,21 +1,19 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
-using System.Linq;
-using Domain;
 
 namespace Application.ExternalServices
 {
     public class CoinMarketCapClient
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
+        private readonly IConfiguration _configuration;
 
-        public CoinMarketCapClient(HttpClient httpClient, string apiKey)
+        public CoinMarketCapClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _apiKey = apiKey;
-            _httpClient.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", _apiKey);
+            _configuration = configuration;
         }
 
         public async Task<decimal?> GetPriceFromExternalApiAsync(string symbol)
@@ -24,19 +22,24 @@ namespace Application.ExternalServices
 
             if (response.IsSuccessStatusCode)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                var jsonDocument = JsonDocument.Parse(content);
-                var quote = jsonDocument.RootElement.GetProperty("data").EnumerateObject().FirstOrDefault();
+                var assetResponse = await response.Content.ReadFromJsonAsync<CoinMarketCapAssetResponse>();
+                return assetResponse.Data[symbol.ToUpper()][0].Quote["USD"].Price;
 
-                if (quote.Value.GetProperty("quote").TryGetProperty("USD", out var usdQuote))
-                {
-                    if (usdQuote.TryGetProperty("price", out var priceElement))
-                    {
-                        return priceElement.GetDecimal();
-                    }
-                }
+                //if (jsonDocument.RootElement
+                //    .TryGetProperty("data", out var dataElement) && dataElement.EnumerateObject().Any())
+                //{
+                //    var quote = dataElement.EnumerateObject().FirstOrDefault().Value;
+
+                //    if (quote.TryGetProperty("quote", out var usdQuote) &&
+                //        usdQuote.TryGetProperty("USD", out var priceQuote) &&
+                //        priceQuote.TryGetProperty("price", out var priceElement))
+                //    {
+                //        return priceElement.GetDecimal();
+                //    }
+                //}
             }
             return null;
         }
+
     }
 }

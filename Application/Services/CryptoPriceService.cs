@@ -35,14 +35,12 @@ namespace Application.Services
                 {
                     Symbol = symbol,
                     Price = externalPrice.Value,
-                    CreatedAt = DateTime.UtcNow
                 };
-
+#warning implement save to database
                 await _cryptoRepository.AddAsync(newCrypto);
 
                 return Result.Ok<decimal?>(newCrypto.Price);
             }
-
             return Result.Fail("Criptomoeda não encontrada.");
         }
     }

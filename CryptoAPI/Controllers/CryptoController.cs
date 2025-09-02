@@ -1,7 +1,5 @@
 ﻿using Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using FluentResults; 
 
 namespace CryptoAPI.Controllers
 {
@@ -17,7 +15,7 @@ namespace CryptoAPI.Controllers
         }
 
         [HttpGet("{symbol}")]
-        public async Task<ActionResult<Result<decimal?>>> GetCryptoPrice(string symbol)
+        public async Task<ActionResult<decimal?>> GetCryptoPrice(string symbol)
         {
             var result = await _cryptoPriceService.GetPriceBySymbolAsync(symbol);
 
@@ -27,10 +25,10 @@ namespace CryptoAPI.Controllers
                 {
                     return Ok(result.Value.Value);
                 }
-                return NotFound(); 
+                return NotFound();
             }
 
-            return StatusCode(500, result.Errors.Select(e => e.Message));
+            return StatusCode(502, result.Errors.Select(e => e.Message));
         }
     }
 }
