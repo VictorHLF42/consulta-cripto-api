@@ -1,6 +1,21 @@
+using Application.ExternalServices;
+using Application.Services;
+using Domain.Interfaces;
+using Infra.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<CryptoDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<DbContext, CryptoDbContext>();
+builder.Services.AddScoped<ICryptoRepository, CryptoRepository>();
+builder.Services.AddScoped<CryptoPriceService>();
+builder.Services.AddHttpClient<CoinMarketCapClient>(client =>
+{
+    var coinMarketCapApiKey = builder.Configuration["CoinMarketCap:ApiKey"];
+    client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", coinMarketCapApiKey);
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -9,7 +24,13 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CryptoDbContext>();
+    db.Database.SetCommandTimeout(1800);
+    await db.Database.MigrateAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -11,16 +11,17 @@ namespace Infra.Data
 
         public DbSet<CryptoCurrency> Cryptocurrencies { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.EnableDetailedErrors();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CryptoCurrency>(entity =>
-            {
-                entity.ToTable("Cryptocurrency");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Symbol).HasColumnType("TEXT").IsRequired();
-                entity.Property(e => e.Price).HasColumnType("REAL").IsRequired();
-                entity.Property(e => e.CreatedAt).HasColumnType("DATETIME").IsRequired();
-            });
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CryptoDbContext).Assembly);
+            base.OnModelCreating(modelBuilder);
         }
+
     }
 }
