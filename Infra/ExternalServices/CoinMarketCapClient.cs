@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 
-namespace Application.ExternalServices
+namespace Infra.ExternalServices
 {
     public class CoinMarketCapClient
     {
