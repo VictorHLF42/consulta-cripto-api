@@ -1,6 +1,6 @@
 ﻿using Domain.Interfaces;
 using System.Threading.Tasks;
-using Application.ExternalServices;
+using Infra.ExternalServices;
 using Domain;
 using System;
 using FluentResults;
@@ -36,7 +36,7 @@ namespace Application.Services
                     Symbol = symbol,
                     Price = externalPrice.Value,
                 };
-#warning implement save to database
+
                 await _cryptoRepository.AddAsync(newCrypto);
 
                 return Result.Ok<decimal?>(newCrypto.Price);

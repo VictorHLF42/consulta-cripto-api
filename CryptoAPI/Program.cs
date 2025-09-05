@@ -1,7 +1,7 @@
-using Application.ExternalServices;
 using Application.Services;
 using Domain.Interfaces;
 using Infra.Data;
+using Infra.ExternalServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
