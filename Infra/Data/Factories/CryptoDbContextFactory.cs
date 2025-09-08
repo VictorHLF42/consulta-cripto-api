@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Infra.Data;
 
 
-namespace CryptoAPI.Factories
+namespace Infra.Data.Factories
 {
     public class CryptoDbContextFactory : IDesignTimeDbContextFactory<CryptoDbContext>
     {

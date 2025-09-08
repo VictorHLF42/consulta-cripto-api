@@ -25,18 +25,6 @@ namespace Infra.ExternalServices
                 var assetResponse = await response.Content.ReadFromJsonAsync<CoinMarketCapAssetResponse>();
                 return assetResponse.Data[symbol.ToUpper()][0].Quote["USD"].Price;
 
-                //if (jsonDocument.RootElement
-                //    .TryGetProperty("data", out var dataElement) && dataElement.EnumerateObject().Any())
-                //{
-                //    var quote = dataElement.EnumerateObject().FirstOrDefault().Value;
-
-                //    if (quote.TryGetProperty("quote", out var usdQuote) &&
-                //        usdQuote.TryGetProperty("USD", out var priceQuote) &&
-                //        priceQuote.TryGetProperty("price", out var priceElement))
-                //    {
-                //        return priceElement.GetDecimal();
-                //    }
-                //}
             }
             return null;
         }

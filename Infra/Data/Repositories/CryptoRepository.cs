@@ -3,7 +3,7 @@ using Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace Infra.Data
+namespace Infra.Data.Repositories
 {
     public class CryptoRepository : ICryptoRepository
     {

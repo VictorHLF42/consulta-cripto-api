@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using Infra.Data;
 using System.Threading.Tasks;
 using Infra.ExternalServices;
 using Domain;

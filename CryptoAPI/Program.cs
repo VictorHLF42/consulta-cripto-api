@@ -1,21 +1,21 @@
 using Application.Services;
 using Domain.Interfaces;
+using FluentResults;
 using Infra.Data;
+using Infra.Data.Repositories;
 using Infra.ExternalServices;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CryptoDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<DbContext, CryptoDbContext>();
 builder.Services.AddScoped<ICryptoRepository, CryptoRepository>();
 builder.Services.AddScoped<CryptoPriceService>();
-builder.Services.AddHttpClient<CoinMarketCapClient>(client =>
-{
-    var coinMarketCapApiKey = builder.Configuration["CoinMarketCap:ApiKey"];
-    client.DefaultRequestHeaders.Add("X-CMC_PRO_API_KEY", coinMarketCapApiKey);
-});
+builder.Services.AddHttpClient<CoinMarketCapClient>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
