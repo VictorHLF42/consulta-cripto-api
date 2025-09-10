@@ -1,10 +1,7 @@
-﻿using Domain.Interfaces;
-using Infra.Data;
-using System.Threading.Tasks;
-using Infra.ExternalServices;
-using Domain;
-using System;
+﻿using Domain;
+using Domain.Interfaces;
 using FluentResults;
+using Infra.ExternalServices;
 
 namespace Application.Services
 {
@@ -19,30 +16,33 @@ namespace Application.Services
             _coinMarketCapClient = coinMarketCapClient;
         }
 
-        public async Task<Result<decimal?>> GetPriceBySymbolAsync(string symbol)
+        public async Task<Result<decimal>> GetPriceBySymbolAsync(string symbol)
         {
             var crypto = await _cryptoRepository.GetBySymbolAsync(symbol);
 
             if (crypto != null)
             {
-                return Result.Ok<decimal?>(crypto.Price);
+                return Result.Ok(crypto.Price);
             }
 
-            var externalPrice = await _coinMarketCapClient.GetPriceFromExternalApiAsync(symbol);
+            var result = await _coinMarketCapClient.GetPriceFromExternalApiAsync(symbol);
 
-            if (externalPrice != null)
+            Console.WriteLine(result + "vai");
+
+            if (!result.IsSuccess)
             {
-                var newCrypto = new CryptoCurrency
-                {
-                    Symbol = symbol,
-                    Price = externalPrice.Value,
-                };
-
-                await _cryptoRepository.AddAsync(newCrypto);
-
-                return Result.Ok<decimal?>(newCrypto.Price);
+                return result;
             }
-            return Result.Fail("Criptomoeda não encontrada.");
+
+            var newCrypto = new CryptoCurrency
+            {
+                Symbol = symbol,
+                Price = result.Value,
+            };
+
+            await _cryptoRepository.AddAsync(newCrypto);
+
+            return Result.Ok(newCrypto.Price);
         }
     }
 }
