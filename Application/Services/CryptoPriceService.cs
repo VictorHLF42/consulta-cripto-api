@@ -27,8 +27,6 @@ namespace Application.Services
 
             var result = await _coinMarketCapClient.GetPriceFromExternalApiAsync(symbol);
 
-            Console.WriteLine(result + "vai");
-
             if (!result.IsSuccess)
             {
                 return result;
