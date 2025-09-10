@@ -1,24 +1,15 @@
-using Application.Services;
-using Domain.Interfaces;
-using FluentResults;
-using Infra.Data;
-using Infra.Data.Repositories;
-using Infra.ExternalServices;
+using Application;  
+using Infra.Data; 
+using Infra.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
+using Application.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<CryptoDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<ICryptoRepository, CryptoRepository>();
-builder.Services.AddScoped<CryptoPriceService>();
-builder.Services.AddHttpClient<CoinMarketCapClient>();
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -38,9 +29,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

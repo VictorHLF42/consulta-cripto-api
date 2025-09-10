@@ -19,23 +19,19 @@ namespace CryptoAPI.Controllers
         {
             var result = await _cryptoPriceService.GetPriceBySymbolAsync(symbol);
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                if (result.Value.HasValue)
-                {
-                    var response = new
-                    {
-                        Symbol = symbol,
-                        Price = result.Value.Value,
-                        UpdatedAt = DateTime.UtcNow
-                    };
-
-                    return Ok(response); 
-                }
-                return NotFound();
+                return StatusCode(502, result.Errors.Select(e => e.Message));
             }
 
-            return StatusCode(502, result.Errors.Select(e => e.Message));
+            var response = new
+            {
+                Symbol = symbol,
+                Price = result.Value,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            return Ok(response);
         }
     }
 }
