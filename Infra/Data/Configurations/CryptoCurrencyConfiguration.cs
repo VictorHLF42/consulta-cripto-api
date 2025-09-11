@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infra.Configurations;
+namespace Infra.Data.Configurations;
 
 public class CryptoCurrencyConfiguration : IEntityTypeConfiguration<CryptoCurrency>
 {

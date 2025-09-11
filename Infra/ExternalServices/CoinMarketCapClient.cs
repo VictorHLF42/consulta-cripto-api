@@ -1,45 +1,35 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentResults;
 using System.Net.Http.Json;
-using System.Reflection.Metadata.Ecma335;
-using System.Text.Json;
 
 namespace Infra.ExternalServices
 {
     public class CoinMarketCapClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
 
-        public CoinMarketCapClient(HttpClient httpClient, IConfiguration configuration)
+        public CoinMarketCapClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _configuration = configuration;
         }
 
-        public async Task<decimal?> GetPriceFromExternalApiAsync(string symbol)
+        public async Task<Result<decimal>> GetPriceFromExternalApiAsync(string symbol)
         {
             var response = await _httpClient.GetAsync($"https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol={symbol}");
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                var assetResponse = await response.Content.ReadFromJsonAsync<CoinMarketCapAssetResponse>();
-                return assetResponse.Data[symbol.ToUpper()][0].Quote["USD"].Price;
-
-                //if (jsonDocument.RootElement
-                //    .TryGetProperty("data", out var dataElement) && dataElement.EnumerateObject().Any())
-                //{
-                //    var quote = dataElement.EnumerateObject().FirstOrDefault().Value;
-
-                //    if (quote.TryGetProperty("quote", out var usdQuote) &&
-                //        usdQuote.TryGetProperty("USD", out var priceQuote) &&
-                //        priceQuote.TryGetProperty("price", out var priceElement))
-                //    {
-                //        return priceElement.GetDecimal();
-                //    }
-                //}
+                return Result.Fail(response.ReasonPhrase);
             }
-            return null;
-        }
 
+            var assetResponse = await response.Content.ReadFromJsonAsync<CoinMarketCapAssetResponse>();
+
+            var currencyInfo = assetResponse.Data[symbol.ToUpper()];
+            if (currencyInfo.Count() == 0)
+            {
+                return Result.Fail("Criptomoeda não encontrada.");
+            }
+
+            return Result.Ok(currencyInfo[0].Quote["USD"].Price.Value);
+        }
     }
 }

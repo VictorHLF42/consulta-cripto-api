@@ -15,20 +15,23 @@ namespace CryptoAPI.Controllers
         }
 
         [HttpGet("{symbol}")]
-        public async Task<ActionResult<decimal?>> GetCryptoPrice(string symbol)
+        public async Task<ActionResult> GetCryptoPrice(string symbol)
         {
             var result = await _cryptoPriceService.GetPriceBySymbolAsync(symbol);
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                if (result.Value.HasValue)
-                {
-                    return Ok(result.Value.Value);
-                }
-                return NotFound();
+                return StatusCode(502, result.Errors.Select(e => e.Message));
             }
 
-            return StatusCode(502, result.Errors.Select(e => e.Message));
+            var response = new
+            {
+                Symbol = symbol,
+                Price = result.Value,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            return Ok(response);
         }
     }
 }
