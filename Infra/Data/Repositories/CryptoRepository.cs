@@ -2,6 +2,9 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using System.Collections.Generic; 
+using System.Linq;
+using System;
 
 namespace Infra.Data.Repositories
 {
@@ -17,7 +20,7 @@ namespace Infra.Data.Repositories
         public async Task<CryptoCurrency?> GetBySymbolAsync(string symbol)
         {
             return await _context.Cryptocurrencies
-                                .FirstOrDefaultAsync(c => c.Symbol == symbol);
+                                 .FirstOrDefaultAsync(c => c.Symbol == symbol);
         }
 
         public async Task AddAsync(CryptoCurrency crypto)
