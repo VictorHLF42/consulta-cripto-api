@@ -12,6 +12,6 @@ namespace Domain.Interfaces
         Task<CryptoCurrency?> GetBySymbolAsync(string symbol);
         Task AddAsync(CryptoCurrency crypto);
 
-        //Task<List<CryptoCurrency>> GetHistoryBySymbolAsync(string symbol, DateTime? dateFrom = null, DateTime? dateTo = null);
+        Task<List<CryptoCurrency>> GetHistoryBySymbolAsync(string symbol, DateTime? dateFrom = null, DateTime? dateTo = null);
     }
 }

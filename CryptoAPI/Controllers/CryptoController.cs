@@ -1,5 +1,9 @@
 ﻿using Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CryptoAPI.Controllers
 {
@@ -21,6 +25,7 @@ namespace CryptoAPI.Controllers
 
             if (!result.IsSuccess)
             {
+                // O desafio requer um 502 Bad Gateway para criptomoedas não encontradas.
                 return StatusCode(502, result.Errors.Select(e => e.Message));
             }
 
@@ -32,6 +37,28 @@ namespace CryptoAPI.Controllers
             };
 
             return Ok(response);
+        }
+
+        // --- NOVO ENDPOINT PARA HISTÓRICO DE PREÇOS ---
+
+        [HttpGet("history")]
+        public async Task<ActionResult> GetHistory([FromQuery] string symbol, [FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo)
+        {
+            // O parâmetro 'symbol' é obrigatório.
+            if (string.IsNullOrWhiteSpace(symbol))
+            {
+                return BadRequest("O parâmetro 'symbol' é obrigatório.");
+            }
+
+            var result = await _cryptoPriceService.GetHistoryBySymbolAsync(symbol, dateFrom, dateTo);
+
+            if (!result.IsSuccess)
+            {
+                // O desafio requer um 404 Not Found se nenhum registro for encontrado.
+                return NotFound(result.Errors.Select(e => e.Message));
+            }
+
+            return Ok(result.Value);
         }
     }
 }
