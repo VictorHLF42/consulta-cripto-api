@@ -21,7 +21,7 @@ namespace CryptoAPI.Controllers
         [HttpGet("{symbol}")]
         public async Task<ActionResult> GetCryptoPrice(string symbol)
         {
-            var result = await _cryptoPriceService.GetPriceBySymbolAsync(symbol);
+            var result = await _cryptoPriceService.GetPriceBySymbolAsync(symbol.ToUpperInvariant());
 
             if (!result.IsSuccess)
             {
@@ -30,9 +30,9 @@ namespace CryptoAPI.Controllers
 
             var response = new
             {
-                Symbol = symbol,
-                Price = result.Value,
-                UpdatedAt = DateTime.UtcNow
+                Symbol = result.Value.Symbol,
+                Price = result.Value.Price,
+                UpdatedAt = result.Value.CreatedAt
             };
 
             return Ok(response);
@@ -46,7 +46,7 @@ namespace CryptoAPI.Controllers
                 return BadRequest("O parâmetro 'symbol' é obrigatório.");
             }
 
-            var result = await _cryptoPriceService.GetHistoryBySymbolAsync(symbol, dateFrom, dateTo);
+            var result = await _cryptoPriceService.GetHistoryBySymbolAsync(symbol.ToUpperInvariant(), dateFrom, dateTo);
 
             if (!result.IsSuccess)
             {

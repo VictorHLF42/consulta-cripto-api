@@ -22,23 +22,13 @@ namespace Application.Services
             _cache = cache;
         }
 
-        public async Task<Result<decimal>> GetPriceBySymbolAsync(string symbol)
+        public async Task<Result<CryptoCurrency>> GetPriceBySymbolAsync(string symbol)
         {
-            if (_cache.TryGetValue<decimal>(symbol, out decimal cachedPrice))
+            if (_cache.TryGetValue<CryptoCurrency>(symbol, out CryptoCurrency cryptoCurrency))
             {
-                return Result.Ok(cachedPrice);
+                return Result.Ok(cryptoCurrency);
             }
-
-            var crypto = await _cryptoRepository.GetBySymbolAsync(symbol);
-
-            if (crypto != null)
-            {
-                _cache.Set(symbol, crypto.Price, new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
-
-                return Result.Ok(crypto.Price);
-            }
-
+            
             var result = await _coinMarketCapClient.GetPriceFromExternalApiAsync(symbol);
 
             if (result.IsSuccess)
@@ -51,10 +41,10 @@ namespace Application.Services
 
                 await _cryptoRepository.AddAsync(newCrypto);
 
-                _cache.Set(symbol, newCrypto.Price, new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
+                _cache.Set(symbol, newCrypto, new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
 
-                return Result.Ok(newCrypto.Price);
+                return Result.Ok(newCrypto);
             }
 
             return Result.Fail("Criptomoeda não encontrada.");
