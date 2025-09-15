@@ -25,7 +25,6 @@ namespace CryptoAPI.Controllers
 
             if (!result.IsSuccess)
             {
-                // O desafio requer um 502 Bad Gateway para criptomoedas não encontradas.
                 return StatusCode(502, result.Errors.Select(e => e.Message));
             }
 
@@ -39,12 +38,9 @@ namespace CryptoAPI.Controllers
             return Ok(response);
         }
 
-        // --- NOVO ENDPOINT PARA HISTÓRICO DE PREÇOS ---
-
         [HttpGet("history")]
         public async Task<ActionResult> GetHistory([FromQuery] string symbol, [FromQuery] DateTime? dateFrom, [FromQuery] DateTime? dateTo)
         {
-            // O parâmetro 'symbol' é obrigatório.
             if (string.IsNullOrWhiteSpace(symbol))
             {
                 return BadRequest("O parâmetro 'symbol' é obrigatório.");
@@ -54,7 +50,6 @@ namespace CryptoAPI.Controllers
 
             if (!result.IsSuccess)
             {
-                // O desafio requer um 404 Not Found se nenhum registro for encontrado.
                 return NotFound(result.Errors.Select(e => e.Message));
             }
 
