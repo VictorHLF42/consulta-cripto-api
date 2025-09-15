@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using System.Net.Http.Json;
+using System.Linq;
 
 namespace Infra.ExternalServices
 {
@@ -23,13 +24,26 @@ namespace Infra.ExternalServices
 
             var assetResponse = await response.Content.ReadFromJsonAsync<CoinMarketCapAssetResponse>();
 
-            var currencyInfo = assetResponse.Data[symbol.ToUpper()];
-            if (currencyInfo.Count() == 0)
+            if (!assetResponse.Data.ContainsKey(symbol.ToUpper()))
             {
-                return Result.Fail("Criptomoeda não encontrada.");
+                return Result.Fail("Símbolo não encontrado na resposta da API.");
             }
 
-            return Result.Ok(currencyInfo[0].Quote["USD"].Price.Value);
+            var currencyInfo = assetResponse.Data[symbol.ToUpper()];
+
+            if (currencyInfo.Count() == 0 || currencyInfo[0].Quote.Count == 0 || !currencyInfo[0].Quote.ContainsKey("USD"))
+            {
+                return Result.Fail("Criptomoeda não encontrada ou sem dados de cotação em USD.");
+            }
+
+            var quote = currencyInfo[0].Quote["USD"];
+
+            if (!quote.Price.HasValue)
+            {
+                return Result.Fail("Preço da criptomoeda não disponível.");
+            }
+
+            return Result.Ok(quote.Price.Value);
         }
     }
 }
