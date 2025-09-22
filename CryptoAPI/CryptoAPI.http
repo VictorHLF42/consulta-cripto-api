@@ -3,4 +3,4 @@
 GET {{CryptoAPI_HostAddress}}/weatherforecast/
 Accept: application/json
 
-###
+
