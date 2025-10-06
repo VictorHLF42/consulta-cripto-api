@@ -7,7 +7,6 @@ public class CoinMarketCapAssetResponse
 
     public class Asset
     {
-        
         [JsonPropertyName("quote")]
         public Dictionary<string, AssetInformation> Quote { get; set; }
     }

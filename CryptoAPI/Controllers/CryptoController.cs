@@ -9,19 +9,13 @@ namespace CryptoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CryptoController : ControllerBase
+    public class CryptoController(CryptoPriceService cryptoPriceService) : ControllerBase
     {
-        private readonly CryptoPriceService _cryptoPriceService;
-
-        public CryptoController(CryptoPriceService cryptoPriceService)
-        {
-            _cryptoPriceService = cryptoPriceService;
-        }
 
         [HttpGet("{symbol}")]
         public async Task<ActionResult> GetCryptoPrice(string symbol)
         {
-            var result = await _cryptoPriceService.GetPriceBySymbolAsync(symbol.ToUpperInvariant());
+            var result = await cryptoPriceService.GetPriceBySymbolAsync(symbol.ToUpperInvariant());
 
             if (!result.IsSuccess)
             {
@@ -46,7 +40,7 @@ namespace CryptoAPI.Controllers
                 return BadRequest("O parâmetro 'symbol' é obrigatório.");
             }
 
-            var result = await _cryptoPriceService.GetHistoryBySymbolAsync(symbol.ToUpperInvariant(), dateFrom, dateTo);
+            var result = await cryptoPriceService.GetHistoryBySymbolAsync(symbol.ToUpperInvariant(), dateFrom, dateTo);
 
             if (!result.IsSuccess)
             {

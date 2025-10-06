@@ -24,19 +24,17 @@ namespace Infra.ExternalServices
 
             var assetResponse = await response.Content.ReadFromJsonAsync<CoinMarketCapAssetResponse>();
 
-            if (!assetResponse.Data.ContainsKey(symbol.ToUpper()))
+            if (!assetResponse.Data.ContainsKey(symbol))
             {
                 return Result.Fail("Símbolo não encontrado na resposta da API.");
             }
 
-            var currencyInfo = assetResponse.Data[symbol.ToUpper()];
+            var currencyInfo = assetResponse.Data[symbol];
 
-            if (currencyInfo.Count() == 0 || currencyInfo[0].Quote.Count == 0 || !currencyInfo[0].Quote.ContainsKey("USD"))
+            if (currencyInfo.Count() == 0 || currencyInfo[0].Quote.Count == 0 || !currencyInfo[0].Quote.TryGetValue("USD", out CoinMarketCapAssetResponse.AssetInformation? quote))
             {
                 return Result.Fail("Criptomoeda não encontrada ou sem dados de cotação em USD.");
             }
-
-            var quote = currencyInfo[0].Quote["USD"];
 
             if (!quote.Price.HasValue)
             {
